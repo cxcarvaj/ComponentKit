@@ -8,15 +8,19 @@
 import SwiftUI
 
 public struct CoolTextField: View {
-    let label: String
-    let placeholder: String
+    let label: LocalizedStringResource
+    let placeholder: LocalizedStringResource
     @Binding var value: String
     let validation: ValidationFunctions
     let isFocused: Bool
     
-    @State private var errorMessage: String?
+    @State private var errorMessage: LocalizedStringResource?
     
-    public init(label: String, placeholder: String, value: Binding<String>, validation: ValidationFunctions, isFocused: Bool = false) {
+    public init(label: LocalizedStringResource,
+                placeholder: LocalizedStringResource,
+                value: Binding<String>,
+                validation: ValidationFunctions,
+                isFocused: Bool = false) {
         self.label = label
         self.placeholder = placeholder
         self._value = value
@@ -31,11 +35,11 @@ public struct CoolTextField: View {
                 .padding(.leading)
                 .accessibilityHidden(true)
             HStack(alignment: .top) {
-                TextField(placeholder,
+                TextField("\(placeholder)",
                           text: $value,
                           axis: .vertical)
                 //                        .lineLimit(2, reservesSpace: true)
-                .accessibilityLabel("\(label). \(placeholder)")
+                .accessibilityLabel(Text("\(label). \(placeholder)"))
                 .accessibilityHint(Text("Text Field. \(errorMessage != nil ? "Error: \(errorMessage!)" : "Enter a value")"))
                 .accessibilityValue(value)
                 
@@ -72,7 +76,7 @@ public struct CoolTextField: View {
                 .opacity(errorMessage != nil ? 1.0 : 0.0)
         }
         .onChange(of: value) {
-            errorMessage = validation.validate(value)
+            errorMessage = "\(validation.validate(value) ?? "")"
         }
         .animation(.default, value: errorMessage)
     }
