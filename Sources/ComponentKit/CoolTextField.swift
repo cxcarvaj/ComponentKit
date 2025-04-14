@@ -12,14 +12,16 @@ public struct CoolTextField: View {
     let placeholder: String
     @Binding var value: String
     let validation: ValidationFunctions
+    let isFocused: Bool
     
     @State private var errorMessage: String?
     
-    public init(label: String, placeholder: String, value: Binding<String>, validation: ValidationFunctions) {
+    public init(label: String, placeholder: String, value: Binding<String>, validation: ValidationFunctions, isFocused: Bool = false) {
         self.label = label
         self.placeholder = placeholder
         self._value = value
         self.validation = validation
+        self.isFocused = isFocused
     }
 
     public var body: some View {
@@ -34,10 +36,10 @@ public struct CoolTextField: View {
                           axis: .vertical)
                 //                        .lineLimit(2, reservesSpace: true)
                 .accessibilityLabel("\(label). \(placeholder)")
-                .accessibilityHint("TextField. \(validation.validate(value) != nil ? "Error: \(errorMessage!)" : "Enter a \(label)")")
+                .accessibilityHint(Text("Text Field. \(errorMessage != nil ? "Error: \(errorMessage!)" : "Enter a value")"))
                 .accessibilityValue(value)
                 
-                if !value.isEmpty {
+                if !value.isEmpty && isFocused {
                     Button {
                         value = ""
                     } label: {
@@ -78,8 +80,10 @@ public struct CoolTextField: View {
 
 #Preview {
     @Previewable @State var value = ""
+    @Previewable @State var isFocused = false
     CoolTextField(label: "Title",
                   placeholder: "Title of the Score",
                   value: $value,
-                  validation: .isNotEmpty)
+                  validation: .isNotEmpty,
+                  isFocused: isFocused)
 }
