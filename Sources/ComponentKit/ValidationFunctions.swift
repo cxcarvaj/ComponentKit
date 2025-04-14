@@ -14,7 +14,7 @@ public enum ValidationFunctions {
 }
 
 extension ValidationFunctions {
-    public func validate(_ value: String) -> String? {
+    public func validate(_ value: String) -> LocalizedStringResource? {
         switch self {
         case .isNotEmpty:
             !value.isEmpty ? nil : " field is required."
