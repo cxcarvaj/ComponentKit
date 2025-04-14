@@ -16,9 +16,9 @@ extension ValidationFunctions {
     public func validate(_ value: String) -> String? {
         switch self {
         case .isNotEmpty:
-            !value.isEmpty ? nil : "field is required"
+            !value.isEmpty ? nil : " field is required."
         case .isEmail:
-            isValidEmail(value) ? nil : "not a valid email"
+            isValidEmail(value) ? nil : " not a valid email."
         }
     }
     
