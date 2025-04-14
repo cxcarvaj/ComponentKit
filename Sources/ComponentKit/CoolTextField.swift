@@ -14,7 +14,7 @@ public struct CoolTextField: View {
     let validation: ValidationFunctions
     let isFocused: Bool
     
-    @State private var errorMessage: LocalizedStringResource?
+    @State private var errorMessage: String?
     
     public init(label: LocalizedStringResource,
                 placeholder: LocalizedStringResource,
@@ -76,7 +76,7 @@ public struct CoolTextField: View {
                 .opacity(errorMessage != nil ? 1.0 : 0.0)
         }
         .onChange(of: value) {
-            errorMessage = "\(validation.validate(value) ?? "")"
+            errorMessage = validation.validate(value)
         }
         .animation(.default, value: errorMessage)
     }
