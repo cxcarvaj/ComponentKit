@@ -11,11 +11,11 @@ public struct CoolTextField: View {
     let label: String
     let placeholder: String
     @Binding var value: String
-    let validation: (String) -> String?
+    let validation: ValidationFunctions
     
     @State private var errorMessage: String?
     
-    public init(label: String, placeholder: String, value: Binding<String>, validation: @escaping (String) -> String?) {
+    public init(label: String, placeholder: String, value: Binding<String>, validation: ValidationFunctions) {
         self.label = label
         self.placeholder = placeholder
         self._value = value
@@ -34,7 +34,7 @@ public struct CoolTextField: View {
                           axis: .vertical)
                 //                        .lineLimit(2, reservesSpace: true)
                 .accessibilityLabel("\(label). \(placeholder)")
-                .accessibilityHint("TextField. \(validation(value) != nil ? "Error: \(errorMessage!)" : "Enter a \(label)")")
+                .accessibilityHint("TextField. \(validation.validate(value) != nil ? "Error: \(errorMessage!)" : "Enter a \(label)")")
                 .accessibilityValue(value)
                 
                 if !value.isEmpty {
@@ -70,7 +70,7 @@ public struct CoolTextField: View {
                 .opacity(errorMessage != nil ? 1.0 : 0.0)
         }
         .onChange(of: value) {
-            errorMessage = validation(value)
+            errorMessage = validation.validate(value)
         }
         .animation(.default, value: errorMessage)
     }
@@ -80,7 +80,6 @@ public struct CoolTextField: View {
     @Previewable @State var value = ""
     CoolTextField(label: "Title",
                   placeholder: "Title of the Score",
-                  value: $value) {
-        $0.isEmpty ? " is required" : nil
-    }
+                  value: $value,
+                  validation: .isNotEmpty)
 }
